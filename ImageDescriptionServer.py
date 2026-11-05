@@ -16,7 +16,14 @@ MAX_MESSAGE_BYTES = 5 * 1024 * 1024
 # TODO: Complete create_listener.
 def create_listener(host, port):
     """Create and return an IPv4 TCP listening Socket."""
-    raise NotImplementedError("TODO: create_listener")
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        listener.bind((host, port))
+        listener.listen()
+    except OSError:
+        listener.close()
+        raise
+    return listener
 
 
 # TODO: Complete accept_client.
@@ -25,7 +32,7 @@ def accept_client(listener):
 
     Returns (conn, address): conn is the connected Socket; address is (IP, port).
     """
-    raise NotImplementedError("TODO: accept_client")
+    return listener.accept()
 
 
 # OPTIONAL PROVIDED HELPER - USE IF NEEDED, DO NOT MODIFY.
@@ -57,7 +64,18 @@ def receive_message(conn):
     closes before any bytes of a new message arrive.
     Example: b"0000000005HELLO" returns b"HELLO".
     """
-    raise NotImplementedError("TODO: receive_message")
+    header = recv_exact(conn, HEADER_SIZE)
+    if header is None:
+        return None
+    if not header.isdigit():
+        raise ValueError("Invalid message header")
+    length = int(header)
+    if not 1 <= length <= MAX_MESSAGE_BYTES:
+        raise ValueError("Invalid message length")
+    payload = recv_exact(conn, length)
+    if payload is None:
+        raise ConnectionError("Connection closed before message data")
+    return payload
 
 
 # TODO: Complete send_message.
@@ -68,13 +86,17 @@ def send_message(conn, payload):
     The length counts data bytes only (1..MAX_MESSAGE_BYTES), excluding the header.
     Returns None on successful completion.
     """
-    raise NotImplementedError("TODO: send_message")
+    length = len(payload)
+    if not 1 <= length <= MAX_MESSAGE_BYTES:
+        raise ValueError("Invalid message length")
+    header = f"{length:010d}".encode("ascii")
+    conn.sendall(header + payload)
 
 
 # TODO: Complete close_client.
 def close_client(conn):
     """Close the connected Socket. Returns None."""
-    raise NotImplementedError("TODO: close_client")
+    conn.close()
 
 
 # ===== PART 2: PROVIDED SOCKET FLOW - READ, DO NOT MODIFY =====

@@ -23,3 +23,8 @@ submission/*
 .vscode/
 Thumbs.db
 .DS_Store
+
+!submission/ImageDescriptionServer_59911219_59271285.py
+!submission/ImageDescriptionClient_59911219_59271285.py
+!submission/Report_59911219_59271285.pdf
+!submission/Report_59911219_59271285.docx

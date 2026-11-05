@@ -1,0 +1,25 @@
+# Local course runtime and installation output
+.venv/
+.tools/
+.runtime/
+setup.log
+__pycache__/
+*.py[cod]
+
+# Keep the bundled weights locally; restore with --download-model after cloning.
+models/**/*.safetensors
+models/**/.cache/
+
+# Instructor demo binaries and their duplicate sample images are local references.
+demos/windows-x64/
+
+# Generated local downloads and the final Canvas package
+downloads/
+submission/*
+!submission/README.md
+
+# Machine-specific editor settings
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
